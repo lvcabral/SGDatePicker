@@ -26,14 +26,17 @@ sub init()
     m.monthList.focusBitmapUri = "pkg:/images/date-back.png"
     m.monthList.focusFootprintBitmapUri = "pkg:/images/date-back.png"
     m.monthList.observeField("itemFocused", "onDateItemFocused")
+    m.monthList.observeField("itemSelected", "onDateItemSelected")
     m.dayList = m.top.findNode("dayList")
     m.dayList.focusBitmapUri = "pkg:/images/date-back.png"
     m.dayList.focusFootprintBitmapUri = "pkg:/images/date-back.png"
     m.dayList.observeField("itemFocused", "onDateItemFocused")
+    m.dayList.observeField("itemSelected", "onDateItemSelected")
     m.yearList = m.top.findNode("yearList")
     m.yearList.focusBitmapUri = "pkg:/images/date-back.png"
     m.yearList.focusFootprintBitmapUri = "pkg:/images/date-back.png"
     m.yearList.observeField("itemFocused", "onDateItemFocused")
+    m.yearList.observeField("itemSelected", "onDateItemSelected")
     m.dateButtons = m.top.findNode("dateButtons")
     m.dateButtons.focusBitmapUri = "pkg:/images/button-back-focus.png"
     m.dateButtons.focusFootprintBitmapUri = "pkg:/images/button-back-footprint.png"
@@ -134,6 +137,18 @@ sub onDateItemFocused(eventObj as object)
         end if
     else if name = "dayList"
         m.day = zeroPad((index+1).ToStr())
+    end if
+end sub
+
+sub onDateItemSelected(eventObj as object)
+    print "cardScreen.brs - onDateItemSelected"
+    name = eventObj.getNode()
+    if name = "monthList"
+        m.dayList.setFocus(true)
+    else if name = "dayList"
+        m.yearList.setFocus(true)
+    else if name = "yearList"
+        m.dateButtons.setFocus(true)
     end if
 end sub
 
