@@ -41,8 +41,15 @@ sub init()
     m.dateButtons.focusBitmapUri = "pkg:/images/button-back-focus.png"
     m.dateButtons.focusFootprintBitmapUri = "pkg:/images/button-back-footprint.png"
     m.dateButtons.observeField("buttonSelected", "onButtonSelected")
-    m.dateButtons.buttons = ["OK", "Cancel"]
+    m.dateButtons.buttons = [tr("OK"), tr("Cancel")]
     m.Overhang = m.top.findNode("Overhang")
+    deviceInfo = createObject("roDeviceInfo")
+    m.locale = deviceInfo.GetCurrentLocale()
+    m.top.findNode("lblTitle").text = tr("Select a Date")
+    if m.locale <> "en_US"
+        m.dayList.translation = [50,75]
+        m.monthList.translation = [160,75]
+    end if
     loadDateLists()
 end sub
 
@@ -59,7 +66,7 @@ sub loadDateLists()
     m.yearList.content = content
     m.yearList.jumpToItem = range
     content = createObject("roSGNode", "ContentNode")
-    months = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    months = tr("Months,Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec").split(",")
     for month = 1 to 12
         item = createObject("roSGNode", "ContentNode")
         item.setFields({title: months[month]})
@@ -77,35 +84,57 @@ sub loadDateLists()
     m.dayList.jumpToItem = date.GetDayOfMonth() - 1
     'focus all lists to initialize "itemFocused" property
     m.yearList.setFocus(true)
-    m.dayList.setFocus(true)
-    m.monthList.setFocus(true)
+    if m.locale = "en_US"
+        m.dayList.setFocus(true)
+        m.monthList.setFocus(true)
+    else
+        m.monthList.setFocus(true)
+        m.dayList.setFocus(true)
+    end if
 end sub
 
 function onKeyEvent(key as string, press as boolean) as boolean
+    focus = ""
     result = false
     if press
         if key = "left"
-            if m.yearList.hasFocus()
-                m.dayList.setFocus(true)
-                return true
-            else if m.dayList.hasFocus()
-                m.monthList.setFocus(true)
-                return true
-            else if not m.monthList.hasFocus()
-                m.yearList.setFocus(true)
-                return true
+            if m.locale = "en_US"
+                if m.yearList.hasFocus()
+                    focus = "dayList"
+                else if m.dayList.hasFocus()
+                    focus = "monthList"
+                else if not m.monthList.hasFocus()
+                    focus = "yearList"
+                end if
+            else
+                if m.yearList.hasFocus()
+                    focus = "monthList"
+                else if m.monthList.hasFocus()
+                    focus = "dayList"
+                else if not m.dayList.hasFocus()
+                    focus = "yearList"
+                end if
             end if
         else if key = "right"
-            if m.monthList.hasFocus()
-                m.dayList.setFocus(true)
-                return true
-            else if m.dayList.hasFocus()
-                m.yearList.setFocus(true)
-                return true
-            else if m.yearList.hasFocus()
-                m.dateButtons.setFocus(true)
-                return true
+            if m.yearList.hasFocus()
+                focus = "dateButtons"
+            else if m.locale = "en_US"
+                if m.monthList.hasFocus()
+                    focus = "dayList"
+                else if m.dayList.hasFocus()
+                    focus = "yearList"
+                end if
+            else
+                if m.dayList.hasFocus()
+                    focus = "monthList"
+                else if m.monthList.hasFocus()
+                    focus = "yearList"
+                end if
             end if
+        end if
+        if focus <> ""
+            m.top.findNode(focus).setFocus(true)
+            result = true
         end if
     end if
     return result
@@ -143,20 +172,30 @@ end sub
 sub onDateItemSelected(eventObj as object)
     print "cardScreen.brs - onDateItemSelected"
     name = eventObj.getNode()
-    if name = "monthList"
-        m.dayList.setFocus(true)
-    else if name = "dayList"
-        m.yearList.setFocus(true)
-    else if name = "yearList"
+    if name = "yearList"
         m.dateButtons.setFocus(true)
+    else if m.locale = "en_US"
+        if name = "monthList"
+            m.dayList.setFocus(true)
+        else if name = "dayList"
+            m.yearList.setFocus(true)
+        end if
+    else
+        if name = "dayList"
+            m.monthList.setFocus(true)
+        else if name = "monthList"
+            m.yearList.setFocus(true)
+        end if
     end if
 end sub
 
 sub onButtonSelected(eventObj as object)
-    selectedDate = "No Date Selected"
+    selectedDate = tr("No Date Selected")
     if eventObj.getData() = 0  'Save
         date = convertDate(m.year, m.month, m.day)
-        selectedDate = date.AsDateString("long-date")
+        if date <> invalid
+            selectedDate = date.AsDateString("long-date")
+        end if
     end if
     m.datePicker.visible = false
     m.dateLabel.text = selectedDate

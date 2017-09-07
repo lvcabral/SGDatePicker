@@ -25,8 +25,8 @@
     <Rectangle id="Backwall" width="1920" height="1080" opacity=".75" color="#000000"/>
     <Label id="dateLabel" font="font:MediumBoldSystemFont" color="#FFFFFF" visible="false"
            horizAlign="center" width="600" translation="[660,500]"/>
-    <Rectangle id="datePicker" color="#FFFFFFFF" width="600" height="350" translation="[660,365]">
-        <Label text="Select a Date" font="font:MediumBoldSystemFont" color="#4D4D4DFF" width="250" translation="[50,25]"/>
+    <Rectangle id="datePicker" color="#FFFFFFFF" width="640" height="350" translation="[680,365]">
+        <Label id="lblTitle" font="font:MediumBoldSystemFont" color="#4D4D4DFF" width="600" translation="[50,25]"/>
         <LabelList id="monthList" vertFocusAnimationStyle="fixedFocusWrap" numRows="3" focusRow="1"
                    color="#8C8C8C" focusedColor="#4D4D4D" translation="[50,75]" itemSize="[100,80]"
                    textHorizAlign="center" wrapDividerBitmapUri="" wrapDividerHeight="1" />
@@ -36,8 +36,10 @@
         <LabelList id="yearList" vertFocusAnimationStyle="fixedFocusWrap" numRows="3" focusRow="1"
                    color="#8C8C8C" focusedColor="#4D4D4D" translation="[270,75]" itemSize="[100,80]"
                    textHorizAlign="center" wrapDividerBitmapUri="" wrapDividerHeight="1" />
-        <ButtonGroup id="dateButtons" iconUri="" focusedIconUri="" minWidth="200" maxWidth="200"
-                     textColor="#4D4D4DFF" focusedTextColor="#E4F0F6FF" translation="[380,80]" buttonHeight="60" />
+        <ButtonGroup id="dateButtons" iconUri="" focusedIconUri="" minWidth="220" maxWidth="220"
+                     textFont="font:SmallBoldSystemFont" focusedTextFont="font:SmallBoldSystemFont"
+                     textColor="#4D4D4DFF" focusedTextColor="#E4F0F6FF"
+                     translation="[380,80]" buttonHeight="60" />
         <Rectangle color="#FFFFFF" opacity="0.8" width="330" height="60" translation="[50,95]" />
         <Rectangle color="#FFFFFF" opacity="0.8" width="330" height="60" translation="[50,235]" />
     </Rectangle>
