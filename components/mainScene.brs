@@ -146,7 +146,7 @@ sub onDateItemFocused(eventObj as object)
     'update day list based on month and year
     if name = "monthList" or name = "yearList"
         m.year = m.yearList.content.getChild(m.yearList.itemFocused).title
-        m.month = zeroPad((m.monthList.itemFocused + 1).ToStr())
+        m.month = (m.monthList.itemFocused + 1).toStr("%02d")
         date = convertDate(m.year, m.month, "01")
         selDay = m.dayList.itemFocused
         lastDay = date.GetLastDayOfMonth()
@@ -155,7 +155,7 @@ sub onDateItemFocused(eventObj as object)
             res = m.dayList.content.removeChildrenIndex(childs - lastDay, lastDay)
             if selDay >= lastDay
                 m.dayList.jumpToItem = lastDay - 1
-                m.day = zeroPad(lastDay.ToStr())
+                m.day = lastDay.toStr("%02d")
             end if
         else if lastDay > childs
             for day = childs + 1 to lastDay
@@ -165,12 +165,11 @@ sub onDateItemFocused(eventObj as object)
             next
         end if
     else if name = "dayList"
-        m.day = zeroPad((index+1).ToStr())
+        m.day = (index+1).toStr("%02d")
     end if
 end sub
 
 sub onDateItemSelected(eventObj as object)
-    print "cardScreen.brs - onDateItemSelected"
     name = eventObj.getNode()
     if name = "yearList"
         m.dateButtons.setFocus(true)
@@ -206,14 +205,4 @@ function convertDate(year, month, day) as object
     date = CreateObject("roDateTime")
     date.FromISO8601String(year + "-" + month + "-" + day + "T12:00:00Z")
     return date
-end function
-
-function zeroPad(text as string, length = invalid) As String
-    if length = invalid then length = 2
-    if text.Len() < length
-        for i = 1 to length-text.Len()
-            text = "0" + text
-        next
-    end If
-    return text
 end function

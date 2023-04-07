@@ -45,7 +45,7 @@
     </Rectangle>
     <Overhang id="Overhang" showClock="true" showOptions="false"
               backgroundUri="pkg:/images/overhang-back-hd.png" color="0x0067A3FF"
-              height="115" logoBaselineOffset="17" />
+              logoBaselineOffset="17" />
   </children>
   <script type="text/brightscript" uri="pkg:/components/mainScene.brs" />
 </component>
